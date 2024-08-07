@@ -33,7 +33,7 @@ jobs:
           FTP_PROTOCOL: ${{ secrets.FTP_PROTOCOL }}
         run: |
           sudo apt-get install -y lftp
-          lftp -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST <<EOF
+          lftp -u $FTP_USERNAME,$FTP_PASSWORD -e "set ssl:verify-certificate no" $FTP_HOST <<EOF
           mirror -R -e --parallel=2 .next $FTP_DESTINATION/.next
           mirror -R -e --parallel=2 public $FTP_DESTINATION/public
           mirror -R -e --parallel=2 static $FTP_DESTINATION/static
