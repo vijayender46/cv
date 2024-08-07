@@ -24,19 +24,31 @@ jobs:
       - name: Build the Next.js app
         run: npm run build
 
+      - name: List build directory contents
+        run: |
+          echo "Listing .next directory:"
+          ls -R .next
+          echo "Listing public directory:"
+          ls -R public
+          echo "Listing static directory:"
+          ls -R static
+          echo "Listing root directory:"
+          ls -R
+
       - name: Deploy to cPanel via FTP
         env:
-          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_HOST: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_DESTINATION: ${{ secrets.FTP_DESTINATION }}
           FTP_PROTOCOL: ${{ secrets.FTP_PROTOCOL }}
         run: |
           sudo apt-get install -y lftp
+          echo "Connecting to FTP server"
           lftp -u $FTP_USERNAME,$FTP_PASSWORD -e "set ssl:verify-certificate no" $FTP_HOST <<EOF
-          mirror -R -e --parallel=2 .next $FTP_DESTINATION/.next
-          mirror -R -e --parallel=2 public $FTP_DESTINATION/public
-          mirror -R -e --parallel=2 static $FTP_DESTINATION/static
+          mirror -R -e --verbose --parallel=2 .next $FTP_DESTINATION/.next
+          mirror -R -e --verbose --parallel=2 public $FTP_DESTINATION/public
+          mirror -R -e --verbose --parallel=2 static $FTP_DESTINATION/static
           put -O $FTP_DESTINATION next.config.js
           put -O $FTP_DESTINATION package.json
           bye
