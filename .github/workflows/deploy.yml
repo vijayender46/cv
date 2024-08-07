@@ -26,7 +26,7 @@ jobs:
 
       - name: Deploy to cPanel via FTP
         env:
-          FTP_HOST: ${{ secrets.FTP_SERVER }}
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_DESTINATION: ${{ secrets.FTP_DESTINATION }}
