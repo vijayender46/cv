@@ -30,8 +30,6 @@ jobs:
           ls -R .next
           echo "Listing public directory:"
           ls -R public
-          echo "Listing static directory:"
-          ls -R static
           echo "Listing root directory:"
           ls -R
 
@@ -48,7 +46,7 @@ jobs:
           lftp -u $FTP_USERNAME,$FTP_PASSWORD -e "set ssl:verify-certificate no" $FTP_HOST <<EOF
           mirror -R -e --verbose --parallel=2 .next $FTP_DESTINATION/.next
           mirror -R -e --verbose --parallel=2 public $FTP_DESTINATION/public
-          mirror -R -e --verbose --parallel=2 static $FTP_DESTINATION/static
+          mirror -R -e --verbose --parallel=2 .next/static $FTP_DESTINATION/.next/static
           put -O $FTP_DESTINATION next.config.js
           put -O $FTP_DESTINATION package.json
           bye
