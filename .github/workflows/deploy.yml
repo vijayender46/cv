@@ -1,31 +1,43 @@
-on: 
-    push:
-      branches:
-        - main
-name: 🚀 Vijayender Thakur cv 
+name: Deploy Next.js to cPanel
+
+on:
+  push:
+    branches:
+      - main  # or the branch you want to deploy from
+
 jobs:
-    web-deploy:
-      name: 🎉 Deploy
-      runs-on: ubuntu-latest
-      steps:
-      - name: 🚚 Get latest code
-        uses: actions/checkout@v3
-  
-      - name: Use Node.js 19
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '19'
-        
-      - name: 🔨 Build Project
+          node-version: '19'  # or the version you are using
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the Next.js app
+        run: npm run build
+
+      - name: Deploy to cPanel via FTP
+        env:
+          FTP_HOST: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_DESTINATION: ${{ secrets.FTP_DESTINATION }}
+          FTP_PROTOCOL: ${{ secrets.FTP_PROTOCOL }}
         run: |
-          npm install
-          npm run build
-      
-      - name: 📂 Sync files
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ${{ secrets.FTP_PROTOCOL }}
-          local-dir: client/public
+          sudo apt-get install -y lftp
+          lftp -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST <<EOF
+          mirror -R -e --parallel=2 .next $FTP_DESTINATION/.next
+          mirror -R -e --parallel=2 public $FTP_DESTINATION/public
+          mirror -R -e --parallel=2 static $FTP_DESTINATION/static
+          put -O $FTP_DESTINATION next.config.js
+          put -O $FTP_DESTINATION package.json
+          bye
+          EOF
