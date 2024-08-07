@@ -1,4 +1,7 @@
 {
+  "name": "vijayender-thakur-cv",
+  "version": "1.0.0",
+  "homepage": "./",
   "private": true,
   "scripts": {
     "build": "next build",
