@@ -1,12 +1,13 @@
 {
   "name": "vijayender-thakur-cv",
   "version": "1.0.0",
-  "homepage": "./",
+  "homepage": "https://vijayenderthakur.com/",
   "private": true,
   "scripts": {
-    "build": "next build",
     "dev": "next dev",
-    "start": "next start"
+    "export": "next build && next export",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js"
   },
   "dependencies": {
     "next": "latest",

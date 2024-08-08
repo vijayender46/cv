@@ -11,7 +11,7 @@ export default function Home() {
 
       <main>
         <h1 className={styles.title}>
-          <a>Welcome to My CV build works</a>
+          <a>Welcome to My CV.</a>
         </h1>
       </main>
 
