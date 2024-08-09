@@ -12,6 +12,7 @@ export default function Home() {
       <main>
         <h1 className={styles.title}>
           <a>Welcome to My CV.</a>
+          <h3>testing if updated text shows</h3>
         </h1>
       </main>
 
